@@ -3,6 +3,34 @@ BUILD_TAG  	?= $(shell cat $(CURDIR)/.version)
 BUILD_HOST	?=
 BUILD_POSTFIX	?=
 
+# ==============
+#  Bump version
+# ==============
+
+.PHONY: release
+VERSION?=minor
+# target: release - Bump version
+release:
+	@git up
+	@pip install bumpversion
+	@bumpversion $(VERSION)
+	@git checkout master
+	@git merge develop
+	@git checkout develop
+	@git push origin develop master
+	@git push --tags
+
+.PHONY: minor
+minor: release
+
+.PHONY: patch
+patch:
+	make release VERSION=patch
+
+.PHONY: major
+major:
+	make release VERSION=major
+
 # =============
 #  Docker
 # =============
