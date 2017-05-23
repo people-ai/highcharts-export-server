@@ -1,0 +1,27 @@
+machine:
+  services:
+    - docker
+  environment:
+    PROJECT_NAME: "highcharts"
+
+dependencies:
+  pre:
+    - pip install ansible
+
+test:
+  override:
+    - docker build -t highcharts:circleci .
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - PROJECT=highcharts REALM=prod AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
+  staging:
+    branch: /release\/\.+/
+    commands:
+      - PROJECT=highcharts REALM=staging AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
+  develop:  
+    branch: master
+    commands:
+      - PROJECT=highcharts REALM=dev AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy

@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: pai-highcharts-deployment
+  name: pai-highcharts-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: pai-highcharts
+  template:
+    metadata:
+      labels:
+        run: pai-highcharts
+    spec:
+      containers:
+      - command:
+        - /app/docker-entrypoint.sh
+        image: {{deploy_docker_registry}}/highcharts:{{deploy_build_num}}
+        imagePullPolicy: Always
+        name: pai-highcharts
+        resources: 
+            requests: 
+                  cpu: 1
+                  memory: 2500Mi
+            limits: 
+                  cpu: 1
+                  memory: 2500Mi
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: pai-highcharts-deployment
+  name: pai-highcharts-service
+spec:
+  ports:
+  - port: 3003
+    protocol: TCP
+    targetPort: 3003
+  selector:
+    run: pai-highcharts
