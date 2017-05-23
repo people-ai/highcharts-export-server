@@ -22,6 +22,6 @@ deployment:
     commands:
       - PROJECT=highcharts REALM=staging AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
   develop:  
-    branch: master
+    branch: develop
     commands:
       - PROJECT=highcharts REALM=dev AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
