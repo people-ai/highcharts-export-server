@@ -55,4 +55,4 @@ docker-clean:
 deploy:
 	rm -rf .deploy
 	git clone git@github.com:people-ai/infra-v2.git .deploy
-	cd .deploy && make install deploy
+	cd .deploy && make install build deploy
