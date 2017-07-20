@@ -53,8 +53,8 @@ docker-clean:
 
 .PHONY: infra
 infra:
-        rm -rf .deploy
-        git clone git@github.com:people-ai/infra-v2.git .deploy
+	rm -rf .deploy
+	git clone git@github.com:people-ai/infra-v2.git .deploy
 
 -include .deploy/Makefile
 
