@@ -51,8 +51,9 @@ docker-clean:
 	@docker rm -v $(shell docker ps -aq --no-trunc) || true
 	@docker rmi $(shell docker images -f dangling=true -q) || true
 
-.PHONY: deploy
-deploy:
+.PHONY: infra
+infra:
 	rm -rf .deploy
 	git clone git@github.com:people-ai/infra-v2.git .deploy
-	cd .deploy && make install build deploy
+
+-include .deploy/Makefile
