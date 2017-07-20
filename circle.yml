@@ -16,12 +16,16 @@ deployment:
   production:
     branch: master
     commands:
-      - PROJECT=highcharts REALM=prod AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
+      - make infra
+      - make install build deploy REALM=staging
+      - make install build REALM=prod
   staging:
     branch: /release\/\.+/
     commands:
-      - PROJECT=highcharts REALM=staging AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
+      - make infra
+      - make install build deploy REALM=staging
   develop:  
     branch: develop
     commands:
-      - PROJECT=highcharts REALM=dev AUTHOR="$CIRCLE_USERNAME" BUILD="$CIRCLE_BUILD_NUM" make deploy
+      - make infra
+      - make install build deploy REALM=dev     

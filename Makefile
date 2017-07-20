@@ -56,3 +56,6 @@ deploy:
 	rm -rf .deploy
 	git clone git@github.com:people-ai/infra-v2.git .deploy
 	cd .deploy && make install deploy
+
+-include .deploy/Makefile
+
