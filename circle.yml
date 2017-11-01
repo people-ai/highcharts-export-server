@@ -20,12 +20,7 @@ deployment:
       - make install build deploy REALM=staging
       - make install build REALM=prod
   staging:
-    branch: /release\/\.+/
+    branch: [ /release\/\.+/ , develop ]
     commands:
       - make infra
       - make install build deploy REALM=staging
-  develop:  
-    branch: develop
-    commands:
-      - make infra
-      - make install build deploy REALM=dev     
