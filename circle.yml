@@ -1,31 +1,79 @@
-machine:
-  services:
-    - docker
+version: 2
+
+base_image: &base_image
   environment:
-    PROJECT_NAME: "highcharts"
+   PROJECT_NAME=highcharts
+   PROJECT=highcharts
+  docker:
+    - image: 093527149400.dkr.ecr.us-west-2.amazonaws.com/docker-builder:latest
 
-dependencies:
-  pre:
-    - pip install ansible
+deploy_steps: &deploy_steps
+  <<: *base_image
+  steps:
+    - checkout
+    - run: deploy.sh
 
-test:
-  override:
-    - docker build -t highcharts:circleci .
+jobs:
+  build:
+    <<: *base_image
+    steps:
+      - checkout
+      - run: git submodule update --init
+      - setup_remote_docker
+      - run: build.sh && publish.sh
+  deploy-staging:
+    <<: *deploy_steps
+  deploy-feature-staging:
+    <<: *deploy_steps
+  deploy-prod:
+    <<: *deploy_steps
+  deploy-pan:
+    <<: *deploy_steps
 
-deployment:
-  production:
-    branch: master
-    commands:
-      - make infra
-      - make install build deploy REALM=staging
-      - make install build REALM=prod
-  staging:
-    branch: /release\/\.+/
-    commands:
-      - make infra
-      - make install build deploy REALM=staging
-  develop:  
-    branch: develop
-    commands:
-      - make infra
-      - make install build deploy REALM=dev     
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - build:
+          context: staging
+          filters:
+            branches:
+              only:
+                - master
+                - /feature\/.*/
+      - approve-staging:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - /feature\/.*/
+      - deploy-feature-staging:
+          context: staging
+          requires:
+            - approve-staging
+      - deploy-staging:
+          context: staging
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - approve-prod:
+          type: approval
+          requires:
+            - deploy-staging
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-prod:
+          context: prod
+          requires:
+            - approve-prod
+      - deploy-pan:
+          context: pan
+          requires:
+            - approve-prod
