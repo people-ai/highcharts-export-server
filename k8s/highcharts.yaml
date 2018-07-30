@@ -18,7 +18,7 @@ spec:
       containers:
       - command:
         - /app/docker-entrypoint.sh
-        image: {{deploy_docker_registry}}/highcharts:{{deploy_build_num}}
+        image: {{deploy_docker_registry}}/highcharts-export-server:{{deploy_build_num}}
         imagePullPolicy: Always
         name: pai-highcharts
         resources: 
