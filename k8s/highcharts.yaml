@@ -1,9 +1,10 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
     run: pai-highcharts-deployment
+    owner: apps-team
   name: pai-highcharts-deployment
 spec:
   replicas: 1
@@ -14,20 +15,21 @@ spec:
     metadata:
       labels:
         run: pai-highcharts
+        owner: apps-team
     spec:
       containers:
       - command:
         - /app/docker-entrypoint.sh
         image: {{deploy_docker_registry}}/highcharts-export-server:{{deploy_build_num}}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: pai-highcharts
-        resources: 
-            requests: 
-                  cpu: 1
-                  memory: 2500Mi
-            limits: 
-                  cpu: 1
-                  memory: 2500Mi
+        resources:
+          requests:
+            cpu: 1
+            memory: 2500Mi
+          limits:
+            cpu: 1
+            memory: 2500Mi
       restartPolicy: Always
 ---
 apiVersion: v1
