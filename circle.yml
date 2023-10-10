@@ -27,8 +27,6 @@ jobs:
     <<: *deploy_steps
   deploy-prod:
     <<: *deploy_steps
-  deploy-pan:
-    <<: *deploy_steps
 
 workflows:
   version: 2
@@ -73,8 +71,3 @@ workflows:
           context: prod
           requires:
             - approve-prod
-      - deploy-pan:
-          context: pan
-          requires:
-            - approve-prod
-           
