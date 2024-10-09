@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:22.04
 
 # Env
 ENV PHANTOMJS_VERSION 1.9.7
